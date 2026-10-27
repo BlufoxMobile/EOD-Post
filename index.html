@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#05070a">
+<title>EOD Post · Cook County Cooks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#05070a; --ink2:#080b10; --panel:#0c1118; --panel2:#111822;
+  --line:rgba(201,169,106,.16); --line2:rgba(201,169,106,.34);
+  --brass:#c9a96a; --brass2:#e4cb93;
+  --text:#ece6d9; --muted:#918b7e; --dim:#57534c;
+  --lcd:#7ee2a8; --amber:#f2b84b; --alert:#ff6f5e; --ice:#9fd4ff;
+  --r:3px;
+  --display:'Bodoni Moda','Didot',Georgia,serif;
+  --sans:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--text);font-family:var(--sans);-webkit-text-size-adjust:100%}
+body{min-height:100vh;background:
+  radial-gradient(1100px 560px at 85% -12%,rgba(159,212,255,.07),transparent 60%),
+  radial-gradient(900px 520px at -10% 110%,rgba(201,169,106,.06),transparent 60%),
+  var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 20px 64px}
+
+/* header */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:18px;margin-bottom:22px;position:relative}
+.top::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,var(--brass),rgba(201,169,106,.15) 55%,transparent)}
+.eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);font-weight:600}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(36px,6.2vw,58px);line-height:.95;margin:10px 0 0;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--brass2)}
+.date{font-size:13px;color:var(--muted);text-align:right;line-height:1.5}
+.date b{display:block;color:var(--text);font-weight:600;font-size:15px}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:920px){
+  .grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
+  .output{position:sticky;top:18px;align-self:start}
+}
+.col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);padding:18px}
+.card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:36px}
+.card-h h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin:0;font-weight:700;flex:1}
+.n{font-family:var(--display);color:var(--brass);font-size:22px;line-height:1;min-width:26px}
+.hint{margin:-4px 0 12px;font-size:13px;color:var(--muted);line-height:1.5}
+
+/* traffic */
+textarea{width:100%;min-height:150px;resize:vertical;background:var(--ink2);color:var(--text);border:0;border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);padding:12px 14px;font:16px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+textarea::placeholder{color:var(--dim)}
+textarea:focus,input:focus{outline:none;box-shadow:inset 0 0 0 1px var(--brass),0 0 0 3px rgba(201,169,106,.12)}
+.tsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.tsum div{background:var(--ink2);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);padding:10px 12px}
+.tsum span{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tsum b{display:block;font-size:24px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.tsum .chi b{color:var(--ice)} .tsum .bs b{color:var(--amber)}
+.check{font-size:13px;margin-top:10px;line-height:1.55}
+.check:empty{display:none}
+.ok{color:var(--lcd)} .warn{color:var(--amber)}
+details{margin-top:8px}
+summary{cursor:pointer;font-size:12px;color:var(--brass);letter-spacing:.08em;text-transform:uppercase;font-weight:600;list-style:none;min-height:40px;display:flex;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'';width:0;height:0;border-left:5px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+.stores{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:4px}
+.store{display:flex;align-items:center;gap:8px;background:var(--ink2);border:0;color:var(--text);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);padding:8px 10px;font:inherit;font-size:13px;cursor:pointer;text-align:left;min-height:44px}
+.store:hover{box-shadow:inset 0 0 0 1px var(--line2)}
+.store .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.store .tr{font-variant-numeric:tabular-nums;color:var(--muted)}
+.store .tr.zero{color:var(--alert)}
+.tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;padding:3px 6px;border-radius:2px;font-weight:800;flex:none}
+.tag.chi{background:rgba(159,212,255,.12);color:var(--ice)}
+.tag.bs{background:rgba(242,184,75,.15);color:var(--amber)}
+.store.moved{box-shadow:inset 0 0 0 1px rgba(242,184,75,.7)}
+.stores-note{font-size:12px;color:var(--muted);margin:8px 0 2px}
+
+/* fields */
+.fields{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.f{display:block;min-width:0}
+.f > span{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dot.chi{background:var(--ice)} .dot.bs{background:var(--amber)}
+.inp{position:relative}
+.f input{width:100%;background:var(--ink2);border:0;border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);color:var(--text);font:600 22px/1 var(--sans);font-variant-numeric:tabular-nums;padding:13px 12px;min-height:52px}
+.f input::placeholder{color:var(--dim);font-weight:500}
+.f.money input{padding-left:30px}
+.f.money .inp::before{content:'$';position:absolute;left:13px;top:50%;transform:translateY(-52%);color:var(--brass);font-weight:600;font-size:19px;pointer-events:none}
+.f.wide{grid-column:1/-1}
+
+/* scoreboard */
+.board .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--line)}
+.board .row:first-of-type{border-top:0;padding-top:4px}
+.lbl{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
+.sub{display:block;font-size:12.5px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.big{font-family:var(--display);font-size:clamp(32px,5vw,42px);font-weight:500;line-height:1;font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.big.empty{color:var(--dim)}
+.big.good{color:var(--lcd)} .big.low{color:var(--amber)}
+.row.hero .big{font-size:clamp(38px,6vw,52px)}
+.goal{font-size:11px;color:var(--muted);margin-top:2px;text-align:right}
+
+/* buttons */
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.primary{width:100%;min-height:56px;border:0;border-radius:var(--r);background:linear-gradient(180deg,#e6cd95,#b8955a);color:#140e05;font-weight:800;letter-spacing:.16em;text-transform:uppercase;font-size:14px;box-shadow:0 12px 32px -14px rgba(201,169,106,.7),inset 0 1px 0 rgba(255,255,255,.35)}
+.primary:hover{filter:brightness(1.05)}
+.primary:active{transform:translateY(1px)}
+.primary:disabled{opacity:.35;cursor:default;filter:none;transform:none}
+.secondary{min-height:52px;border:0;border-radius:var(--r);background:var(--ink2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px;padding:0 18px}
+.secondary:disabled{opacity:.35;cursor:default}
+.ghost{background:transparent;border:0;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:8px 12px;min-height:36px;border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line)}
+.ghost:hover{color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+
+/* post */
+.post-text{margin:0;background:var(--ink2);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);padding:16px 18px;font:16px/1.45 var(--sans);white-space:pre-wrap;word-break:break-word;min-height:120px;color:var(--text);-webkit-user-select:text;user-select:text}
+.post-text.empty{color:var(--dim);display:flex;align-items:center;justify-content:center;text-align:center;font-size:14px}
+.btns{display:flex;gap:10px;margin-top:12px}
+.btns .primary{flex:1}
+.toggle{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;min-height:36px;font-weight:600}
+.toggle input{accent-color:#c9a96a;width:18px;height:18px;margin:0}
+
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,16px);opacity:0;background:var(--text);color:var(--ink);padding:13px 18px;border-radius:var(--r);font-weight:700;font-size:14px;transition:opacity .2s,transform .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center;z-index:9;box-shadow:0 14px 40px -10px rgba(0,0,0,.8)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.bad{background:var(--amber)}
+
+@media(max-width:560px){
+  .wrap{padding:22px 16px 48px}
+  .top{flex-direction:column;align-items:flex-start}
+  .date{text-align:left}
+  .tsum b{font-size:20px}
+  .card{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Cook County Cooks · The Freezer</div>
+      <h1>End of Day <em>Post</em></h1>
+    </div>
+    <div class="date"><b id="today"></b>Chicago + Big South</div>
+  </header>
+
+  <main class="grid">
+    <section class="col">
+      <article class="card">
+        <div class="card-h"><span class="n">01</span><h2>Traffic</h2><button class="ghost" id="clearTraffic" type="button">Clear</button></div>
+        <p class="hint">Paste the Sites and Traffic columns straight from the sheet. The Tennessee stores land in Big South automatically; tap any store below to move it.</p>
+        <textarea id="traffic" spellcheck="false" autocomplete="off" placeholder="51009 - Comcast Cable Oak Ridge&#9;142&#10;51023 - Comcast Cable Round Lake&#9;53&#10;55011 - Xfinity Cicero IL&#9;132&#10;…"></textarea>
+        <div class="tsum">
+          <div class="chi"><span>Chicago</span><b id="tChi">0</b></div>
+          <div class="bs"><span>Big South</span><b id="tBs">0</b></div>
+          <div><span>Market</span><b id="tAll">0</b></div>
+        </div>
+        <div id="check" class="check"></div>
+        <details id="storesWrap">
+          <summary>Stores read (<span id="storeCount">0</span>)</summary>
+          <div id="stores" class="stores"></div>
+          <div class="stores-note">Tap a store to switch it between Chicago and Big South. Your choice sticks for next time.</div>
+        </details>
+      </article>
+
+      <article class="card">
+        <div class="card-h"><span class="n">02</span><h2>Phones</h2></div>
+        <div class="fields">
+          <label class="f"><span><i class="dot chi"></i>Chicago phones</span><div class="inp"><input id="chiPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span><i class="dot bs"></i>Big South phones</span><div class="inp"><input id="bsPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-h"><span class="n">03</span><h2>Market totals</h2></div>
+        <div class="fields">
+          <label class="f"><span>Total RGUs</span><div class="inp"><input id="rgus" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span>Plus lines</span><div class="inp"><input id="plus" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span>Watches</span><div class="inp"><input id="watches" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span>Tablets</span><div class="inp"><input id="tablets" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f money"><span>Accessories</span><div class="inp"><input id="acc" inputmode="decimal" autocomplete="off" placeholder="0.00"></div></label>
+          <label class="f money"><span>GP</span><div class="inp"><input id="gp" inputmode="decimal" autocomplete="off" placeholder="0.00"></div></label>
+        </div>
+      </article>
+    </section>
+
+    <section class="col output">
+      <article class="card board">
+        <div class="row">
+          <div><div class="lbl"><i class="dot chi"></i>Chicago MCR</div><span class="sub" id="sChi">Phones ÷ traffic</span></div>
+          <div><div class="big empty" id="mChi">—</div></div>
+        </div>
+        <div class="row">
+          <div><div class="lbl"><i class="dot bs"></i>Big South MCR</div><span class="sub" id="sBs">Phones ÷ traffic</span></div>
+          <div><div class="big empty" id="mBs">—</div></div>
+        </div>
+        <div class="row hero">
+          <div><div class="lbl">Market MCR</div><span class="sub" id="sAll">All phones ÷ all traffic</span></div>
+          <div><div class="big empty" id="mAll">—</div><div class="goal">Goal <span id="goalTxt"></span></div></div>
+        </div>
+        <div class="row">
+          <div><div class="lbl">Market FCR</div><span class="sub" id="sFcr">RGUs ÷ traffic</span></div>
+          <div><div class="big empty" id="mFcr">—</div></div>
+        </div>
+        <div class="row">
+          <div><div class="lbl">Plus Attach</div><span class="sub" id="sPlus">Plus lines ÷ phones</span></div>
+          <div><div class="big empty" id="mPlus">—</div></div>
+        </div>
+      </article>
+
+      <button id="build" class="primary" type="button">Build &amp; copy tonight's post</button>
+
+      <article class="card">
+        <div class="card-h"><h2>GroupMe post</h2><label class="toggle"><input type="checkbox" id="fcrToggle"> Add FCR</label></div>
+        <pre id="post" class="post-text empty">Your post shows up here</pre>
+        <div class="btns">
+          <button id="copy" class="secondary" type="button" disabled style="flex:1">Copy again</button>
+          <button id="reset" class="ghost" type="button">Start fresh</button>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- settings ---------- */
+const MCR_GOAL = 0.07;  // standing Mobile Close Rate goal
+// Big South (Tennessee) store numbers: Oak Ridge, Greeneville, South Knoxville, Johnson City, North Knoxville
+const BIG_SOUTH = new Set(['51009','51011','51022','51031','51045']);
+const BS_NAME = /oak\s*ridge|greeneville|knox|johnson\s*city/i;   // fallback when a row has no store number
+const CHICAGO_HEADER = 'Chicagooooooooooooooooooooo';
+const STATE_KEY = 'c3-eod-post-v1';
+const MOVE_KEY  = 'c3-eod-post-moves-v1';
+const FIELDS = {chiPhones:'Chicago phones', bsPhones:'Big South phones', rgus:'RGUs', plus:'Plus lines',
+                watches:'Watches', tablets:'Tablets', acc:'Accessories', gp:'GP'};
+const MONEY = new Set(['acc','gp']);
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const ls = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+const NUM_RE = /-?\d[\d,]*(?:\.\d+)?/g;
+function toNum(v){
+  const s = String(v == null ? '' : v).replace(/[^0-9.\-]/g,'');
+  return /\d/.test(s) ? parseFloat(s) : NaN;
+}
+function field(id){ const n = toNum($(id).value); return isNaN(n) ? null : n; }
+const int   = n => Math.round(n || 0).toLocaleString('en-US');
+const money = n => (n || 0).toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
+const ok    = r => r != null && isFinite(r);
+const pct2  = r => ok(r) ? (r*100).toFixed(2) + '%' : '—';
+const pct0  = r => ok(r) ? Math.round(r*100) + '%' : '—';
+const esc   = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function bizDay(){ // numbers posted after midnight still count as the same night
+  const d = new Date(); if (d.getHours() < 4) d.setDate(d.getDate() - 1);
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+/* ---------- traffic parsing ---------- */
+function cleanName(s){
+  let n = s.replace(/^[\s\-–—:]+/,''), prev;
+  do { prev = n; n = n.replace(/^(?:CC|Comcast\s+Cable|Xfinity|LTM|BF)\b[\s\-–—:]*/i,''); } while (n !== prev);
+  n = n.replace(/[\s,]+(?:IL|IN|TN)$/i,'').trim();
+  return n || s.trim();
+}
+function parseTraffic(text){
+  const map = new Map(); let total = null;
+  for (const raw of text.split(/\r?\n/)){
+    const line = raw.replace(/\u00a0/g,' ').trim();
+    if (!line) continue;
+    const nums = line.match(NUM_RE);
+    if (!nums) continue;                                   // header rows
+    if (!/[a-z]/i.test(line)){                             // a bare number = the sheet's total row
+      if (nums.length === 1) total = toNum(nums[0]);
+      continue;
+    }
+    const id = (line.match(/^(\d{5})(?!\d)/) || [])[1] || null;
+    if (id && nums.length < 2) continue;                   // store with no traffic number
+    const traffic = toNum(nums[nums.length-1]);
+    if (isNaN(traffic)) continue;
+    let name = id ? line.slice(5) : line;
+    name = cleanName(name.replace(/[\s,]*-?\d[\d,]*(?:\.\d+)?\s*$/,''));
+    const key = id || name.toLowerCase();
+    const auto = id ? (BIG_SOUTH.has(id) ? 'bs' : 'chi') : (BS_NAME.test(name) ? 'bs' : 'chi');
+    map.set(key, {key, id, name, traffic, auto});         // a repeated store replaces, never double-counts
+  }
+  return {rows:[...map.values()], total};
+}
+
+/* ---------- state ---------- */
+let moves = ls.get(MOVE_KEY) || {};
+let built = false;
+let C = {};
+
+function save(){
+  const fields = {};
+  Object.keys(FIELDS).forEach(k => fields[k] = $(k).value);
+  ls.set(STATE_KEY, {day: bizDay(), traffic: $('traffic').value, fields, fcr: $('fcrToggle').checked, built});
+}
+function restore(){
+  const s = ls.get(STATE_KEY);
+  if (s && typeof s.fcr === 'boolean') $('fcrToggle').checked = s.fcr;
+  if (!s || s.day !== bizDay()) return;                    // yesterday's numbers never carry over
+  $('traffic').value = s.traffic || '';
+  Object.keys(FIELDS).forEach(k => { if (s.fields && s.fields[k] != null) $(k).value = s.fields[k]; });
+  built = !!s.built;
+}
+
+/* ---------- calc + render ---------- */
+function setBig(id, r, text, goal){
+  const el = $(id);
+  el.textContent = text;
+  el.className = 'big' + (ok(r) ? (goal ? (r >= MCR_GOAL ? ' good' : ' low') : '') : ' empty');
+}
+function recalc(){
+  const parsed = parseTraffic($('traffic').value);
+  let tChi = 0, tBs = 0;
+  parsed.rows.forEach(r => { r.mkt = moves[r.key] || r.auto; if (r.mkt === 'bs') tBs += r.traffic; else tChi += r.traffic; });
+  const tAll = tChi + tBs;
+  const chiPh = field('chiPhones') || 0, bsPh = field('bsPhones') || 0, xm = chiPh + bsPh;
+  const rgus = field('rgus') || 0, plus = field('plus') || 0;
+  C = {
+    parsed, tChi, tBs, tAll, chiPh, bsPh, xm, rgus, plus,
+    watches: field('watches') || 0, tablets: field('tablets') || 0,
+    acc: field('acc') || 0, gp: field('gp') || 0,
+    mcrChi: tChi ? chiPh / tChi : null,
+    mcrBs:  tBs  ? bsPh / tBs   : null,
+    mcrAll: tAll ? xm / tAll    : null,
+    fcr:    tAll ? rgus / tAll  : null,
+    attach: xm   ? plus / xm    : null
+  };
+
+  // traffic summary
+  $('tChi').textContent = int(tChi);
+  $('tBs').textContent  = int(tBs);
+  $('tAll').textContent = int(tAll);
+  $('storeCount').textContent = parsed.rows.length;
+
+  // sanity checks
+  const notes = [];
+  if ($('traffic').value.trim() && !parsed.rows.length)
+    notes.push('<span class="warn">Couldn\u2019t find any store rows. Paste the Sites and Traffic columns together.</span>');
+  if (parsed.rows.length){
+    const bsCount = parsed.rows.filter(r => r.mkt === 'bs').length;
+    notes.push(`<span class="ok">${parsed.rows.length} stores read \u00b7 ${parsed.rows.length - bsCount} Chicago, ${bsCount} Big South</span>`);
+  }
+  if (parsed.total != null && parsed.rows.length){
+    if (Math.round(parsed.total) === Math.round(tAll)) notes.push(`<span class="ok">\u2713 Matches the sheet total of ${int(parsed.total)}</span>`);
+    else notes.push(`<span class="warn">Stores add up to ${int(tAll)} but the sheet total says ${int(parsed.total)}. Check for a missing row.</span>`);
+  }
+  const zeros = parsed.rows.filter(r => r.traffic === 0).map(r => r.name);
+  if (zeros.length) notes.push(`<span class="warn">0 traffic at ${esc(zeros.join(', '))}. Counter down?</span>`);
+  $('check').innerHTML = notes.join('<br>');
+
+  // store chips
+  const sorted = parsed.rows.slice().sort((a,b) => (a.mkt === b.mkt ? a.name.localeCompare(b.name) : (a.mkt === 'chi' ? -1 : 1)));
+  $('stores').innerHTML = sorted.map(r =>
+    `<button type="button" class="store${moves[r.key] ? ' moved' : ''}" data-key="${esc(r.key)}" title="Tap to move to ${r.mkt === 'bs' ? 'Chicago' : 'Big South'}">` +
+    `<span class="tag ${r.mkt}">${r.mkt === 'bs' ? 'BS' : 'CHI'}</span>` +
+    `<span class="nm">${esc(r.name)}</span><span class="tr${r.traffic === 0 ? ' zero' : ''}">${int(r.traffic)}</span></button>`
+  ).join('');
+
+  // scoreboard
+  setBig('mChi', C.mcrChi, pct2(C.mcrChi), true);
+  setBig('mBs',  C.mcrBs,  pct2(C.mcrBs),  true);
+  setBig('mAll', C.mcrAll, pct2(C.mcrAll), true);
+  setBig('mFcr', C.fcr,    pct2(C.fcr));
+  setBig('mPlus',C.attach, pct0(C.attach));
+  $('sChi').textContent  = `${int(chiPh)} phones \u00f7 ${int(tChi)} traffic`;
+  $('sBs').textContent   = `${int(bsPh)} phones \u00f7 ${int(tBs)} traffic`;
+  $('sAll').textContent  = `${int(xm)} phones \u00f7 ${int(tAll)} traffic`;
+  $('sFcr').textContent  = `${int(rgus)} RGUs \u00f7 ${int(tAll)} traffic`;
+  $('sPlus').textContent = `${int(plus)} Plus lines \u00f7 ${int(xm)} phones`;
+
+  if (built) renderPost();
+  save();
+}
+
+function postText(){
+  const L = [
+    `${int(C.xm)} XM`,
+    `${int(C.rgus)} RGUs`,
+    `${int(C.watches)} Watches`,
+    `${int(C.tablets)} Tablets`,
+    `${money(C.acc)} Accessories`,
+    `${money(C.gp)} GP`,
+    '',
+    CHICAGO_HEADER,
+    '',
+    `${pct2(C.mcrChi)} MCR`,
+    '',
+    'BIG SOUTH',
+    '',
+    `${pct2(C.mcrBs)} MCR`,
+    '',
+    'Market Total:',
+    '',
+    `${pct2(C.mcrAll)} MCR`
+  ];
+  if ($('fcrToggle').checked) L.push(`${pct2(C.fcr)} FCR`);
+  L.push('', `Plus Attach ${pct0(C.attach)}`);
+  return L.join('\n');
+}
+function renderPost(){
+  const p = $('post');
+  p.textContent = postText();
+  p.classList.remove('empty');
+  $('copy').disabled = false;
+}
+
+/* ---------- copy ---------- */
+async function copyText(t){
+  try { if (navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(t); return true; } } catch(e){}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.setAttribute('readonly',''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+    const done = document.execCommand('copy'); ta.remove(); return done;
+  } catch(e){ return false; }
+}
+function selectPost(){
+  const r = document.createRange(); r.selectNodeContents($('post'));
+  const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+let toastTimer;
+function toast(msg, bad){
+  const t = $('toast'); t.textContent = msg; t.className = 'show' + (bad ? ' bad' : '');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.className = bad ? 'bad' : '', 3200);
+}
+async function copyPost(prefix){
+  const done = await copyText(postText());
+  if (done) toast(prefix || 'Copied. Paste it in GroupMe.');
+  else { selectPost(); toast('Press and hold the post to copy it', true); }
+}
+
+async function build(){
+  recalc();
+  if (!C.tAll){ toast('Paste tonight\u2019s traffic first', true); $('traffic').focus(); return; }
+  built = true; renderPost(); save();
+  const blank = Object.keys(FIELDS).filter(k => field(k) == null).map(k => FIELDS[k]);
+  await copyPost(blank.length ? `Copied \u00b7 posted as 0: ${blank.join(', ')}` : 'Built and copied. Paste it in GroupMe.');
+  if (window.innerWidth < 920) $('post').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ---------- wiring ---------- */
+$('today').textContent = new Date().toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+$('goalTxt').textContent = (MCR_GOAL*100).toFixed(0) + '%';
+restore();
+
+document.addEventListener('input', e => { if (e.target.matches('input, textarea')) recalc(); });
+document.addEventListener('change', e => { if (e.target.id === 'fcrToggle') recalc(); });
+Object.keys(FIELDS).forEach(k => {
+  $(k).addEventListener('blur', () => {
+    const n = field(k); if (n == null) return;
+    $(k).value = MONEY.has(k)
+      ? n.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2})
+      : Math.round(n).toLocaleString('en-US');
+    recalc();
+  });
+  $(k).addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const ks = Object.keys(FIELDS), i = ks.indexOf(k); if (i < ks.length-1) $(ks[i+1]).focus(); else build(); } });
+});
+$('stores').addEventListener('click', e => {
+  const b = e.target.closest('.store'); if (!b) return;
+  const row = C.parsed.rows.find(r => r.key === b.dataset.key); if (!row) return;
+  const next = row.mkt === 'bs' ? 'chi' : 'bs';
+  if (next === row.auto) delete moves[row.key]; else moves[row.key] = next;
+  ls.set(MOVE_KEY, moves); recalc();
+  toast(`${row.name} moved to ${next === 'bs' ? 'Big South' : 'Chicago'}`);
+});
+$('clearTraffic').addEventListener('click', () => { $('traffic').value = ''; recalc(); $('traffic').focus(); });
+$('build').addEventListener('click', build);
+$('copy').addEventListener('click', () => copyPost());
+$('reset').addEventListener('click', () => {
+  if (!confirm('Clear tonight\u2019s traffic and numbers?')) return;
+  $('traffic').value = ''; Object.keys(FIELDS).forEach(k => $(k).value = '');
+  built = false; $('post').textContent = 'Your post shows up here'; $('post').classList.add('empty'); $('copy').disabled = true;
+  recalc(); window.scrollTo({top:0, behavior:'smooth'});
+});
+recalc();
+})();
+</script>
+</body>
+</html>
