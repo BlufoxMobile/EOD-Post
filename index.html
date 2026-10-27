@@ -166,10 +166,10 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
       </article>
 
       <article class="card">
-        <div class="card-h"><span class="n">02</span><h2>Phones</h2></div>
+        <div class="card-h"><span class="n">02</span><h2>XM</h2></div>
         <div class="fields">
-          <label class="f"><span><i class="dot chi"></i>Chicago phones</span><div class="inp"><input id="chiPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
-          <label class="f"><span><i class="dot bs"></i>Big South phones</span><div class="inp"><input id="bsPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span><i class="dot chi"></i>Chicago XM</span><div class="inp"><input id="chiPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
+          <label class="f"><span><i class="dot bs"></i>Big South XM</span><div class="inp"><input id="bsPhones" inputmode="numeric" autocomplete="off" placeholder="0"></div></label>
         </div>
       </article>
 
@@ -189,15 +189,15 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
     <section class="col output">
       <article class="card board">
         <div class="row">
-          <div><div class="lbl"><i class="dot chi"></i>Chicago MCR</div><span class="sub" id="sChi">Phones ÷ traffic</span></div>
+          <div><div class="lbl"><i class="dot chi"></i>Chicago MCR</div><span class="sub" id="sChi">XM ÷ traffic</span></div>
           <div><div class="big empty" id="mChi">—</div></div>
         </div>
         <div class="row">
-          <div><div class="lbl"><i class="dot bs"></i>Big South MCR</div><span class="sub" id="sBs">Phones ÷ traffic</span></div>
+          <div><div class="lbl"><i class="dot bs"></i>Big South MCR</div><span class="sub" id="sBs">XM ÷ traffic</span></div>
           <div><div class="big empty" id="mBs">—</div></div>
         </div>
         <div class="row hero">
-          <div><div class="lbl">Market MCR</div><span class="sub" id="sAll">All phones ÷ all traffic</span></div>
+          <div><div class="lbl">Market MCR</div><span class="sub" id="sAll">All XM ÷ all traffic</span></div>
           <div><div class="big empty" id="mAll">—</div><div class="goal">Goal <span id="goalTxt"></span></div></div>
         </div>
         <div class="row">
@@ -205,7 +205,7 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
           <div><div class="big empty" id="mFcr">—</div></div>
         </div>
         <div class="row">
-          <div><div class="lbl">Plus Attach</div><span class="sub" id="sPlus">Plus lines ÷ phones</span></div>
+          <div><div class="lbl">Plus Attach</div><span class="sub" id="sPlus">Plus lines ÷ phones (XM − watches − tablets)</span></div>
           <div><div class="big empty" id="mPlus">—</div></div>
         </div>
       </article>
@@ -237,7 +237,7 @@ const BS_NAME = /oak\s*ridge|greeneville|knox|johnson\s*city/i;   // fallback wh
 const CHICAGO_HEADER = 'Chicagooooooooooooooooooooo';
 const STATE_KEY = 'c3-eod-post-v1';
 const MOVE_KEY  = 'c3-eod-post-moves-v1';
-const FIELDS = {chiPhones:'Chicago phones', bsPhones:'Big South phones', rgus:'RGUs', plus:'Plus lines',
+const FIELDS = {chiPhones:'Chicago XM', bsPhones:'Big South XM', rgus:'RGUs', plus:'Plus lines',
                 watches:'Watches', tablets:'Tablets', acc:'Accessories', gp:'GP'};
 const MONEY = new Set(['acc','gp']);
 
@@ -328,15 +328,16 @@ function recalc(){
   const tAll = tChi + tBs;
   const chiPh = field('chiPhones') || 0, bsPh = field('bsPhones') || 0, xm = chiPh + bsPh;
   const rgus = field('rgus') || 0, plus = field('plus') || 0;
+  const watches = field('watches') || 0, tablets = field('tablets') || 0;
+  const phones = xm - watches - tablets;                  // phones only, for Plus Attach
   C = {
-    parsed, tChi, tBs, tAll, chiPh, bsPh, xm, rgus, plus,
-    watches: field('watches') || 0, tablets: field('tablets') || 0,
+    parsed, tChi, tBs, tAll, chiPh, bsPh, xm, phones, rgus, plus, watches, tablets,
     acc: field('acc') || 0, gp: field('gp') || 0,
     mcrChi: tChi ? chiPh / tChi : null,
     mcrBs:  tBs  ? bsPh / tBs   : null,
     mcrAll: tAll ? xm / tAll    : null,
     fcr:    tAll ? rgus / tAll  : null,
-    attach: xm   ? plus / xm    : null
+    attach: phones > 0 ? plus / phones : null
   };
 
   // traffic summary
@@ -375,11 +376,11 @@ function recalc(){
   setBig('mAll', C.mcrAll, pct2(C.mcrAll), true);
   setBig('mFcr', C.fcr,    pct2(C.fcr));
   setBig('mPlus',C.attach, pct0(C.attach));
-  $('sChi').textContent  = `${int(chiPh)} phones \u00f7 ${int(tChi)} traffic`;
-  $('sBs').textContent   = `${int(bsPh)} phones \u00f7 ${int(tBs)} traffic`;
-  $('sAll').textContent  = `${int(xm)} phones \u00f7 ${int(tAll)} traffic`;
+  $('sChi').textContent  = `${int(chiPh)} XM \u00f7 ${int(tChi)} traffic`;
+  $('sBs').textContent   = `${int(bsPh)} XM \u00f7 ${int(tBs)} traffic`;
+  $('sAll').textContent  = `${int(xm)} XM \u00f7 ${int(tAll)} traffic`;
   $('sFcr').textContent  = `${int(rgus)} RGUs \u00f7 ${int(tAll)} traffic`;
-  $('sPlus').textContent = `${int(plus)} Plus lines \u00f7 ${int(xm)} phones`;
+  $('sPlus').textContent = `${int(plus)} Plus \u00f7 ${int(C.phones)} phones (${int(xm)} XM \u2212 ${int(C.watches)} watches \u2212 ${int(C.tablets)} tablets)`;
 
   if (built) renderPost();
   save();
